@@ -1,8 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 
 class Location {
-  double? longitude;
-  double? latitude;
+  double longitude = 0;
+  double latitude = 0;
 
   bool? _serviceEnabled;
   LocationPermission? _permission;
