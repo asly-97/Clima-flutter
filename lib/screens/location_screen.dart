@@ -2,11 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:clima/utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
+  final weatherData;
+  LocationScreen({required this.weatherData});
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
+  late int temperature;
+  late int condition;
+  late String city;
+
+  updateUI(dynamic weatherData) {
+    condition = weatherData['current']['weather'][0]['id'];
+    double temp = weatherData['current']['temp'];
+    temperature = temp.toInt();
+    city = weatherData['timezone'].toString().split("/").last;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateUI(widget.weatherData);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +68,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '32°',
+                      '$temperature°',
                       style: kTempTextStyle,
                     ),
                     Text(
@@ -62,7 +81,7 @@ class _LocationScreenState extends State<LocationScreen> {
               Padding(
                 padding: EdgeInsets.only(right: 15.0),
                 child: Text(
-                  "It's 🍦 time in San Francisco!",
+                  "It's 🍦 time in $city!",
                   textAlign: TextAlign.right,
                   style: kMessageTextStyle,
                 ),
@@ -74,11 +93,3 @@ class _LocationScreenState extends State<LocationScreen> {
     );
   }
 }
-
-/*
-
-int condition = decodedData['current']['weather'][0]['id'];
-      double temp = decodedData['current']['temp'];
-      String city = decodedData['timezone'];
-
-* */
