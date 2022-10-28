@@ -4,8 +4,25 @@ import 'package:clima/services/networking.dart';
 const String apiKey = "a1cc62b6f0acdbbec9da54a1903c7f4f";
 const String openWeatherMapURL =
     'https://api.openweathermap.org/data/3.0/onecall';
+const String openWeatherMapGeocodingURL =
+    'http://api.openweathermap.org/geo/1.0/direct';
 
 class WeatherModel {
+  static Future getCityWeather(String city) async {
+    String url =
+        '$openWeatherMapGeocodingURL?q=$city&limit=1&appid=$apiKey&units=metric';
+    NetworkHelper networkHelper = NetworkHelper(url);
+
+    var geocodingData = await networkHelper.getData();
+    double lat = geocodingData[0]['lat'];
+    double lon = geocodingData[0]['lon'];
+
+    NetworkHelper networkHelper2 = NetworkHelper(
+        "$openWeatherMapURL?lat=$lat&lon=$lon&exclude=hourly,daily&appid=$apiKey&units=metric");
+
+    return await networkHelper2.getData();
+  }
+
   static Future getLocationWeather() async {
     Location location = Location();
     await location.getCurrentLocation();
